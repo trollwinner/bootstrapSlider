@@ -1,0 +1,22 @@
+body {
+    padding-top: 30px;
+}
+.slider {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.slide .inner {
+    background: #8aee8f;
+}
+.prev, .next {
+    cursor: pointer;
+}
+.slider-responsive-pagination li {
+    float: left;
+    width: 30px;
+    list-style: none;
+    cursor: pointer;
+}
+.slider-responsive-pagination li:hover, .slider-responsive-pagination li.active{
+    text-decoration: underline;
+}
