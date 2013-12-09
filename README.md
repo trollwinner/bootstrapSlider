@@ -1,0 +1,4 @@
+bootstrapSlider
+===============
+
+bootstrap responsive carousel
