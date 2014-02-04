@@ -1,4 +1,7 @@
-//v.2.1 itglx.com
+/*
+ * BootstrapSlider - v.2.2
+ * https://github.com/trollwinner
+ */
 (function( $ ) {
     $.fn.bootstrapSlider = function(options) {
         return this.each(function() {
@@ -8,45 +11,54 @@
                 delay : false,
                 hideNav : false,
                 responsive : true,
-                paginationUl : false
+                paginationUl : false,
+                loop : true
             };
             options = $.extend( defaultOptions, options );
+            
             var slide = $(this).find('.slide');
             var prev = $(this).find('.prev');
             var next = $(this).find('.next');
             var slideParent = slide.parent();
             var childrenCount = slide.children().length;
             var unit = '%';
-            var offset = 0;
             var temp = 0;
             var bufferLeft = 0;
-            var x = 0;
+            var childrenPerLoop = 0;
+            var multiplier = 3;
 
             if (options.hideNav) {
                 prev.css({'visibility': 'hidden'});
                 next.css({'visibility': 'hidden'});
             }
-            if (slide.children(':first-child').outerWidth(true)*childrenCount > slideParent.width()) {
+            if (!options.loop) {
+                multiplier = 1;
+            }
+
+            if (slide.children(':first-child').outerWidth(true) * childrenCount > slideParent.width()) {
+
                 slide.children().each(function () {
                     temp += $(this).outerWidth(true);
                     if (temp <= slideParent.width()) {
-                        x++;
+                        childrenPerLoop++;
                     }
                 });
-                if(x==0) {x=1;}
-                var oneChildIinPx = (slide.parent().width()) / x;
-                var slideWidthInPx = childrenCount * 3 * oneChildIinPx;
+
+                var childCss = {};
+                if (childrenPerLoop == 0) {
+                    childrenPerLoop = 1;
+                    childCss['float'] = 'left';
+                }
+                var oneChildIinPx = (slide.parent().width()) / childrenPerLoop;
+                var slideWidthInPx = childrenCount * multiplier * oneChildIinPx;
                 var slideWidthIinPc = 100 / (slide.parent().width() / slideWidthInPx);
                 var oneChildWidthInPc = 100 / (slideWidthInPx / oneChildIinPx);
                 var slideCssWidth, oneChildWidth, oneChildOffset = 0;
-                var childCss = {};
-                if(x==1) {
-                    childCss['float'] = 'left';
-                }
-                if(options.responsive) {
+
+                if (options.responsive) {
                     slideCssWidth = slideWidthIinPc;
                     oneChildWidth = oneChildWidthInPc;
-                    oneChildOffset = (slideWidthIinPc / 3) / childrenCount;
+                    oneChildOffset = (slideWidthIinPc / multiplier) / childrenCount;
                 } else {
                     unit = 'px';
                     slideCssWidth = slideWidthInPx;
@@ -54,7 +66,13 @@
                     oneChildOffset = oneChildIinPx;
                 }
                 childCss['width'] = oneChildWidth + unit;
-                bufferLeft = -(slideCssWidth / 3);
+
+                if (options.loop) {
+                    bufferLeft = -(slideCssWidth / multiplier);
+                    $(slide.children()).clone().appendTo(slide).addClass('clone').clone().prependTo(slide).addClass('clone');
+                } else {
+                    bufferLeft = 0;
+                }
 
                 //adding css
                 slideParent.css({
@@ -68,94 +86,20 @@
                 });
                 slide.children().css(childCss);
 
-                //clone children
-                $(slide.children()).clone().appendTo(slide).addClass('clone').clone().prependTo(slide).addClass('clone');
-
                 //pagination
                 if (options.paginationUl) {
-                    var pagg = $(this).find(options.paginationUl);
-                    var paggHtml = '';
-                    var array = [];
-                    temp = childrenCount;
-                    for (var i = 1; i <= Math.ceil(childrenCount / options.offsetCount); i++) {
-                        array[i] = temp;
-                        temp = temp - options.offsetCount;
-                    }
-                    array = array.reverse();
-                    for (i = 1; i <= Math.ceil(childrenCount / options.offsetCount); i++) {
-                        paggHtml = paggHtml + '<li data-num="' + (array[i - 1]) + '">' + i + '</li>';
-                    }
-                    pagg.html('').append(paggHtml);
-                    pagg.children('li:first-child').addClass('active');
-                    pagg.children('li').on('click', function () {
-                        if (slide.is(':animated')) {return false;}
-                        var num = $(this).attr('data-num');
-                        pagg.children('li').removeClass('active');
-                        $(this).addClass('active');
-                        bufferLeft = -Math.abs((slideCssWidth / 3) + (oneChildOffset * (num - 1)));
-                        slide.animate({
-                            left: bufferLeft + unit
-                        }, options.speed);
-                        return true;
-                    });
-                }
-
-                //work
-                function work(x) {
-                    if (slide.is(':animated')) {return false;}
-                    //limits
-                    if ((-bufferLeft + -x * options.offsetCount * oneChildOffset) > childrenCount * oneChildOffset * 2) {
-                        offset = -(childrenCount * oneChildOffset * -2);
-                        bufferLeft = -Math.abs(offset);
-                    } else if (-1 * (-bufferLeft + -x * options.offsetCount * oneChildOffset) > -childrenCount * oneChildOffset && bufferLeft != -childrenCount * oneChildOffset) {
-                        offset = (-childrenCount * oneChildOffset);
-                        bufferLeft = -Math.abs(offset);
-                    }
-                    else {
-                        offset = options.offsetCount * oneChildOffset + (bufferLeft * x);
-                        bufferLeft = -Math.abs(offset);
-                    }
-                    //pagination change
-                    if (options.paginationUl) {
-                        if (x == -1) {
-                            if (pagg.children('li.active').is(':last-child')) {
-                                pagg.children('li.active').removeClass('active');
-                                pagg.children('li:first-child').addClass('active');
-                            }
-                            else {
-                                pagg.children('li.active').removeClass('active').next().addClass('active');
-                            }
-                        }
-                        else {
-                            if (pagg.children('li.active').is(':first-child')) {
-                                pagg.children('li.active').removeClass('active');
-                                pagg.children('li:last-child').addClass('active');
-                            }
-                            else {
-                                pagg.children('li.active').removeClass('active').prev().addClass('active');
-                            }
-                        }
-                    }
-
-                    slide.animate({
-                        left: (x * offset) + unit
-                    }, options.speed, '', slideLimit(x * offset));
-                    return true;
-                }
-
-                function slideLimit(str) {
-                    setTimeout(f, options.speed + 50);
-                    function f() {
-                        if (-str < childrenCount * oneChildOffset) {
-                            bufferLeft = str + (-childrenCount * oneChildOffset);
-                            slide.css('left', bufferLeft + unit);
-                        }
-                        if (-str >= (childrenCount * oneChildOffset * 2)) {
-                            bufferLeft = (-childrenCount * oneChildOffset);
-                            slide.css('left', bufferLeft + unit);
-                        }
+                    var pagination = $(this).find(options.paginationUl);
+                    if (options.loop) {
+                        loopPaginationCreate();
+                        loopPaginationClickDelegate();
+                    } else {
+                        notLoopPaginationCreate();
+                        notLoopPaginationClickDelegate();
                     }
                 }
+
+                next.on('click', function() { work(-1);});
+                prev.on('click', function() { work(1); });
 
                 //auto play
                 if (options.delay) {
@@ -177,15 +121,172 @@
                         }
                     }, options.delay);
                 }
-
-                next.on('click', function(){work(-1);});
-                prev.on('click', function(){work(1);});
             }
             else {
                 prev.css({'visibility': 'hidden'});
                 next.css({'visibility': 'hidden'});
             }
             return true;
+
+            function loopPaginationCreate() {
+                var paginationHtml = '';
+                var array = [];
+                var x = Math.ceil(childrenCount / options.offsetCount);
+                temp = childrenCount;
+                for (var i = 1; i <= x; i++) {
+                    array[i] = temp;
+                    temp = temp - options.offsetCount;
+                }
+                array = array.reverse();
+                for (i = 1; i <= x; i++) {
+                    paginationHtml = paginationHtml + '<li data-num="' + (array[i - 1]) + '">' + i + '</li>';
+                }
+                pagination.html('').append(paginationHtml);
+                pagination.children('li:first-child').addClass('active');
+                return true;
+            }
+            function loopPaginationClickDelegate() {
+                pagination.children('li').on('click', function () {
+                    if (slide.is(':animated')) {return false;}
+                    pagination.children('li').removeClass('active');
+                    $(this).addClass('active');
+                    bufferLeft = -Math.abs((slideCssWidth / multiplier) + (oneChildOffset * ($(this).attr('data-num') - 1)));
+                    slide.animate({
+                        left: bufferLeft + unit
+                    }, options.speed);
+                    return true;
+                });
+            }
+            function notLoopPaginationCreate() {
+                var paginationHtml = '';
+                var x = Math.ceil((childrenCount - childrenPerLoop) / options.offsetCount) + 1;
+                temp = 0;
+                for (var i = 1; i <= x; i++) {
+                    paginationHtml = paginationHtml + '<li data-num="' + (temp) + '">' + i + '</li>';
+                    temp = temp + options.offsetCount;
+                    if (temp > childrenCount - childrenPerLoop ) {
+                        temp = childrenCount - childrenPerLoop;
+                    }
+                }
+                pagination.html('').append(paginationHtml);
+                pagination.children('li:first-child').addClass('active');
+                prev.addClass('disabled');
+                return true;
+            }
+            function notLoopPaginationClickDelegate() {
+                pagination.children('li').on('click', function () {
+                    if (slide.is(':animated')) {return false;}
+                    pagination.children('li').removeClass('active');
+                    $(this).addClass('active');
+                    bufferLeft = -oneChildOffset * $(this).attr('data-num');
+                    next.removeClass('disabled');
+                    prev.removeClass('disabled');
+                    if ($(this).is(':last-child')) {
+                        next.addClass('disabled');
+                    } else if ($(this).is(':first-child')) {
+                        prev.addClass('disabled');
+                    }
+                    slide.animate({
+                        left: bufferLeft + unit
+                    }, options.speed);
+                    return true;
+                });
+            }
+            function loopPaginationChange(x) {
+                if (x == -1) {
+                    if (pagination.children('li.active').is(':last-child')) {
+                        pagination.children('li.active').removeClass('active');
+                        pagination.children('li:first-child').addClass('active');
+                    }
+                    else {
+                        pagination.children('li.active').removeClass('active').next().addClass('active');
+                    }
+                }
+                else {
+                    if (pagination.children('li.active').is(':first-child')) {
+                        pagination.children('li.active').removeClass('active');
+                        pagination.children('li:last-child').addClass('active');
+                    }
+                    else {
+                        pagination.children('li.active').removeClass('active').prev().addClass('active');
+                    }
+                }
+                return true;
+            }
+            function notLoopPaginationChange(x) {
+                if (x == -1) {
+                    if (!pagination.children('li.active').is(':last-child')) {
+                        next.removeClass('disabled');
+                        prev.removeClass('disabled');
+                        pagination.children('li.active').removeClass('active').next().addClass('active');
+                        if (pagination.children('li.active').is(':last-child')) {
+                            next.addClass('disabled');
+                        }
+                    }
+                } else {
+                    if (!pagination.children('li.active').is(':first-child')) {
+                        next.removeClass('disabled');
+                        prev.removeClass('disabled');
+                        pagination.children('li.active').removeClass('active').prev().addClass('active');
+                        if (pagination.children('li.active').is(':first-child')) {
+                            prev.addClass('disabled');
+                        }
+                    }
+                }
+                return true;
+            }
+            function loopEmulate() {
+                setTimeout(function() {
+                    if (bufferLeft > -childrenCount * oneChildOffset) {
+                        bufferLeft = bufferLeft - childrenCount * oneChildOffset;
+                        slide.css('left', bufferLeft + unit);
+                    }
+                    else if (bufferLeft <= (-childrenCount * oneChildOffset * 2)) {
+                        bufferLeft = bufferLeft + childrenCount * oneChildOffset;
+                        slide.css('left', bufferLeft + unit);
+                    }
+                }, options.speed + 50);
+            }
+            function work(x) {
+                if (slide.is(':animated')) {return false;}
+                if (options.loop) {
+                    //if loop
+                    if ((bufferLeft + x * options.offsetCount * oneChildOffset) < -childrenCount * oneChildOffset * 2) {
+                        bufferLeft = -childrenCount * oneChildOffset * 2;
+                    } else if ((bufferLeft + x * options.offsetCount * oneChildOffset) > -childrenCount * oneChildOffset && (bufferLeft != -childrenCount * oneChildOffset)) {
+                        bufferLeft = -childrenCount * oneChildOffset;
+                    }
+                    else {
+                        bufferLeft += x * options.offsetCount * oneChildOffset;
+                    }
+                    slide.animate({
+                        left: (bufferLeft) + unit
+                    }, options.speed, '', loopEmulate());
+                } else {
+                    //if not loop
+                    if (((bufferLeft + (x * oneChildOffset * options.offsetCount)) <= 0 && x==1) || ((bufferLeft + (x * oneChildOffset * options.offsetCount)) > childrenPerLoop * oneChildOffset - slideCssWidth && x==-1)) {
+                        bufferLeft += x * oneChildOffset * options.offsetCount;
+                    } else {
+                        if (x==1) {
+                            bufferLeft = 0;
+                        } else {
+                            bufferLeft = childrenPerLoop * oneChildOffset - slideCssWidth;
+                        }
+                    }
+                    slide.animate({
+                        left: (bufferLeft) + unit
+                    }, options.speed, '');
+                }
+                //pagination change
+                if (options.paginationUl) {
+                    if (options.loop) {
+                        loopPaginationChange(x);
+                    } else {
+                        notLoopPaginationChange(x);
+                    }
+                }
+                return true;
+            }
         });
     };
 })(jQuery);
