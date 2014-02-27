@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Bootstrap Responsive Carousel 2.2</title>
+        <title>Bootstrap Responsive Carousel 2.3</title>
 		<link rel="stylesheet" href="bootstrap.min.css" type="text/css"/>
 		<link rel="stylesheet" href="demo.css" type="text/css"/>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -25,6 +25,13 @@
                     paginationUl: $('.slider-not-loop-pagination'),
                     loop: false
                 });
+                $('.slider-custom-elements').bootstrapSlider({
+                    slide: $('.slider-items-wrapper'),
+                    next: $('.slider-next'),
+                    prev: $('.slider-prev')
+                });
+                $('.slider-custom-grid').bootstrapSlider();
+                $('.slider-full-width').bootstrapSlider();
             });
         </script>
 	</head>
@@ -33,131 +40,248 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1>
-                        <a href="https://github.com/trollwinner" target="_blank">Bootstrap Responsive Carousel 2.2</a>
+                        <a href="https://github.com/trollwinner" target="_blank">Bootstrap Responsive Carousel 2.3</a>
                     </h1>
-                    <h2>Hierarchy:</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Hierarchy:</h2>
 <pre>
 &ltdiv class="js-selector"&gt
     &ltdiv class="prev"&gt&lt/div&gt
     &ltdiv class="next"&gt&lt/div&gt
-    &ltdiv class="row"&gt
-        &ltdiv class="slide"&gt
-            &ltdiv class="col-md-3"&gt&lt/div&gt
+    &ltdiv class="any-container-only-for-overflow-hidden"&gt
+        &ltdiv class="row"&gt
+            &ltdiv class="slide"&gt
+                &ltdiv class="col-md-3"&gt&lt/div&gt
+            &lt/div&gt
         &lt/div&gt
     &lt/div&gt
 &lt/div&gt
 </pre>
-                    <p>Items ".next", ".prev", ".slide" are required for js. Item ".row" is required for correct width of children</p>
-                    <h2>Default options</h2>
-                    <code>
-                        $('.slider-responsive').bootstrapSlider();
-                    </code>
-                    <div class="slider-responsive slider">
-                        <div class="row">
-                            <div class="col-xs-1">
-                                <div class="prev btn btn-default">
-                                    &laquo;
-                                </div>
-                            </div>
-                            <div class="col-xs-10">
-                                <div class="row">
-                                    <div class="slide">
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">1</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">2</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">3</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">4</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">5</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">6</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">7</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">8</div></div>
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">9</div></div>
+                            <p>Items ".next", ".prev", ".slide" are required for js. Item ".row" is required for correct width of children</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Default options</h2>
+                            <code>
+                                $('.slider-responsive').bootstrapSlider();
+                            </code>
+                            <div class="slider-responsive slider">
+                                <div>
+                                    <div class="row">
+                                        <div class="slide">
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">1</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">2</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">3</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">4</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">5</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">6</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">7</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">8</div></div>
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><div class="inner">9</div></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-1">
-                                <div class="next btn btn-default">
-                                    &raquo;
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="prev btn btn-default">
+                                            &laquo;
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="next btn btn-default">
+                                            &raquo;
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h2>Not responsive, autoplay, pagination</h2>
-                    <code>
-                        $('.slider-not-responsive').bootstrapSlider({<br/>
-                            speed: 600,<br/>
-                            delay: 2000,<br/>
-                            offsetCount: 2,<br/>
-                            hideNav: true,<br/>
-                            responsive: false,<br/>
-                            paginationUl: $('.slider-not-responsive-pagination')<br/>
-                        });
-                    </code>
-                    <div class="slider-not-responsive slider">
-                        <ul class="slider-not-responsive-pagination slider-pagination clearfix"></ul>
-                        <div class="row">
-                            <div class="col-xs-1">
-                                <div class="prev btn btn-default">
-                                    &laquo;
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Not responsive, autoplay, pagination</h2>
+                            <code>
+                                $('.slider-not-responsive').bootstrapSlider({<br/>
+                                speed: 600,<br/>
+                                delay: 2000,<br/>
+                                offsetCount: 2,<br/>
+                                hideNav: true,<br/>
+                                responsive: false,<br/>
+                                paginationUl: $('.slider-not-responsive-pagination')<br/>
+                                });
+                            </code>
+                            <div class="slider-not-responsive slider">
+                                <ul class="slider-not-responsive-pagination slider-pagination clearfix"></ul>
+                                <div>
+                                    <div class="row">
+                                        <div class="slide">
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">1</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">2</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">3</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">4</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">5</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">6</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">7</div></div>
+                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">8</div></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-10">
                                 <div class="row">
-                                    <div class="slide">
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">1</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">2</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">3</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">4</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">5</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">6</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">7</div></div>
-                                        <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">8</div></div>
+                                    <div class="col-xs-6">
+                                        <div class="prev btn btn-default">
+                                            &laquo;
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="next btn btn-default">
+                                            &raquo;
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-1">
-                                <div class="next btn btn-default">
-                                    &raquo;
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Responsive, not loop, pagination</h2>
+                            <code>
+                                $('.slider-not-loop').bootstrapSlider({<br/>
+                                speed: 200,<br/>
+                                offsetCount: 3,<br/>
+                                paginationUl: $('.slider-not-loop-pagination'),<br/>
+                                loop: false<br/>
+                                });
+                            </code>
+                            <div class="slider-not-loop slider">
+                                <ul class="slider-not-loop-pagination slider-pagination clearfix"></ul>
+                                <div>
+                                    <div class="row">
+                                        <div class="slide">
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">1</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">2</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">3</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">4</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">5</div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="prev btn btn-default">
+                                            &laquo;
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="next btn btn-default">
+                                            &raquo;
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h2>Responsive, not loop, pagination</h2>
-                    <code>
-                        $('.slider-not-loop').bootstrapSlider({<br/>
-                        speed: 200,<br/>
-                        offsetCount: 3,<br/>
-                        paginationUl: $('.slider-not-loop-pagination'),<br/>
-                        loop: false<br/>
-                        });
-                    </code>
-                    <div class="slider-not-loop slider">
-                        <ul class="slider-not-loop-pagination slider-pagination clearfix"></ul>
-                        <div class="row">
-                            <div class="col-xs-1">
-                                <div class="prev btn btn-default">
-                                    &laquo;
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Custom elements</h2>
+                            <code>
+                                $('.slider-custom-elements').bootstrapSlider({<br/>
+                                slide: $('.slider-items-wrapper'),<br/>
+                                next: $('.slider-next'),<br/>
+                                prev: $('.slider-prev')<br/>
+                                });
+                            </code>
+                            <div class="slider-custom-elements slider">
+                                <div>
+                                    <div class="row">
+                                        <div class="slider-items-wrapper">
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">1</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">2</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">3</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">4</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">5</div></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-10">
                                 <div class="row">
-                                    <div class="slide">
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">1</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">2</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">3</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">4</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">5</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">6</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">7</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">8</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">9</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">10</div></div>
-                                        <div class="col-sm-4 col-xs-6"><div class="inner">11</div></div>
+                                    <div class="col-xs-6">
+                                        <div class="slider-prev btn btn-default">
+                                            &laquo;
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="slider-next btn btn-default">
+                                            &raquo;
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-1">
-                                <div class="next btn btn-default">
-                                    &raquo;
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Custom grid</h2>
+                            <code>
+                                $('.slider-custom-grid').bootstrapSlider(); <br/>
+                                <br/>
+                                .slider-custom-grid-item {<br/>
+                                width: 20%;<br/>
+                                float: left;<br/>
+                                outline: 1px solid #fff;<br/>
+                                }
+                            </code>
+                            <div class="slider-custom-grid slider">
+                                <div class="slide clearfix">
+                                    <div class="slider-custom-grid-item"><div class="inner">1</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">2</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">3</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">4</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">5</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">6</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">7</div></div>
+                                    <div class="slider-custom-grid-item"><div class="inner">8</div></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="prev btn btn-default">
+                                            &laquo;
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="next btn btn-default">
+                                            &raquo;
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Full width</h2>
+                            <code>
+                                $('.slider-full-width').bootstrapSlider();
+                            </code>
+                            <div class="slider-full-width slider">
+                                <div>
+                                    <div class="row">
+                                        <div class="slide">
+                                            <div class="col-xs-12"><div class="inner">1</div></div>
+                                            <div class="col-xs-12"><div class="inner">2</div></div>
+                                            <div class="col-xs-12"><div class="inner">3</div></div>
+                                            <div class="col-xs-12"><div class="inner">4</div></div>
+                                            <div class="col-xs-12"><div class="inner">5</div></div>
+                                            <div class="col-xs-12"><div class="inner">6</div></div>
+                                            <div class="col-xs-12"><div class="inner">7</div></div>
+                                            <div class="col-xs-12"><div class="inner">8</div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="prev btn btn-default">
+                                            &laquo;
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="next btn btn-default">
+                                            &raquo;
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
