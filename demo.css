@@ -4,9 +4,10 @@
     outline: 1px solid #E2E2E2;
     padding: 10px 0;
 }
-.slide .inner {
+.slider .inner {
     background: #dcdcdc;
     padding: 15px 0;
+    margin-bottom: 15px;
 }
 .slider-pagination li {
     float: left;
@@ -16,4 +17,9 @@
 }
 .slider-pagination li:hover, .slider-pagination li.active{
     text-decoration: underline;
+}
+.slider-custom-grid-item {
+    width: 20%;
+    float: left;
+    outline: 1px solid #fff;
 }
