@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.2
+ * BootstrapSlider - v.2.3
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -12,21 +12,28 @@
                 hideNav : false,
                 responsive : true,
                 paginationUl : false,
-                loop : true
+                next : $('.next'),
+                prev : $('.prev'),
+                slide : $('.slide'),
+                loop : true,
+                autoPlayStopOnHover : true
             };
             options = $.extend( defaultOptions, options );
             
-            var slide = $(this).find('.slide');
-            var prev = $(this).find('.prev');
-            var next = $(this).find('.next');
+            var slide = $(this).find(options.slide);
+            var prev = $(this).find(options.prev);
+            var next = $(this).find(options.next);
             var slideParent = slide.parent();
+            var slideParentWrapper = null;
             var childrenCount = slide.children().length;
             var unit = '%';
             var temp = 0;
             var bufferLeft = 0;
             var childrenPerLoop = 0;
             var multiplier = 3;
-
+            if (slideParent.parent().attr('class') !== $(this).attr('class')) {
+                slideParentWrapper = slideParent.parent();
+            }
             if (options.hideNav) {
                 prev.css({'visibility': 'hidden'});
                 next.css({'visibility': 'hidden'});
@@ -75,6 +82,11 @@
                 }
 
                 //adding css
+                if (slideParentWrapper != null) {
+                    slideParentWrapper.css({
+                        'overflow': 'hidden'
+                    });
+                }
                 slideParent.css({
                     'overflow': 'hidden'
                 });
@@ -110,11 +122,13 @@
                     window.onfocus = function () {
                         blocked = false;
                     };
-                    $(this).hover(function () {
-                        blocked = true;
-                    }, function () {
-                        blocked = false;
-                    });
+                    if (options.autoPlayStopOnHover) {
+                        $(this).hover(function () {
+                            blocked = true;
+                        }, function () {
+                            blocked = false;
+                        });
+                    }
                     setInterval(function () {
                         if (!blocked) {
                             next.click();
@@ -290,5 +304,3 @@
         });
     };
 })(jQuery);
-
-
