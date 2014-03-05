@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.3
+ * BootstrapSlider - v.2.3.1
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -31,7 +31,7 @@
             var bufferLeft = 0;
             var childrenPerLoop = 0;
             var multiplier = 3;
-            if (slideParent.parent().attr('class') !== $(this).attr('class')) {
+            if (slideParent.parent()[0] !== $(this)[0]) {
                 slideParentWrapper = slideParent.parent();
             }
             if (options.hideNav) {
