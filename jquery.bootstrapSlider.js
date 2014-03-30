@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.3.2
+ * BootstrapSlider - v.2.3.3
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -145,16 +145,9 @@
 
             function loopPaginationCreate() {
                 var paginationHtml = '';
-                var array = [];
-                var x = Math.ceil(childrenCount / options.offsetCount);
-                temp = childrenCount;
-                for (var i = 1; i <= x; i++) {
-                    array[i] = temp;
-                    temp = temp - options.offsetCount;
-                }
-                array = array.reverse();
-                for (i = 1; i <= x; i++) {
-                    paginationHtml = paginationHtml + '<li data-num="' + (array[i - 1]) + '">' + i + '</li>';
+                var j = 1;
+                for (var i = 1; i <= childrenCount; i = i + options.offsetCount) {
+                    paginationHtml = paginationHtml + '<li data-num="' + i + '">' + (j++) + '</li>';
                 }
                 pagination.html('').append(paginationHtml);
                 pagination.children('li:first-child').addClass('active');
