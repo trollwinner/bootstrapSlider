@@ -7,9 +7,10 @@
 		<link rel="stylesheet" href="bootstrap.min.css" type="text/css"/>
 		<link rel="stylesheet" href="demo.css" type="text/css"/>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="jquery.bootstrapSlider.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+        <script src="jquery.bootstrapSlider.js"></script>
         <script type="text/javascript">
-            $(document).ready(function () {
+            jQuery(document).ready(function ($) {
                 $('.slider-responsive').bootstrapSlider();
                 $('.slider-not-responsive').bootstrapSlider({
                     speed: 600,
@@ -17,13 +18,15 @@
                     offsetCount: 2,
                     hideNav: true,
                     responsive: false,
-                    paginationUl: $('.slider-not-responsive-pagination')
+                    paginationUl: $('.slider-not-responsive-pagination'),
+                    easing: 'easeInOutBack'
                 });
                 $('.slider-not-loop').bootstrapSlider({
-                    speed: 200,
+                    speed: 500,
                     offsetCount: 3,
                     paginationUl: $('.slider-not-loop-pagination'),
-                    loop: false
+                    loop: false,
+                    easing: 'easeOutExpo'
                 });
                 $('.slider-custom-elements').bootstrapSlider({
                     slide: $('.slider-items-wrapper'),
@@ -107,6 +110,7 @@
                                 hideNav: true,<br/>
                                 responsive: false,<br/>
                                 paginationUl: $('.slider-not-responsive-pagination')<br/>
+                                easing: 'easeInOutBack'<br/>
                                 });
                             </code>
                             <div class="slider-not-responsive slider">
@@ -147,6 +151,7 @@
                                 offsetCount: 3,<br/>
                                 paginationUl: $('.slider-not-loop-pagination'),<br/>
                                 loop: false<br/>
+                                easing: 'easeOutExpo'<br/>
                                 });
                             </code>
                             <div class="slider-not-loop slider">
@@ -158,7 +163,11 @@
                                             <div class="col-sm-3 col-xs-6"><div class="inner">2</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">3</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">4</div></div>
-                                            <div class="col-sm-3 col-xs-6"><div class="inner">5</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">6</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">7</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">8</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">9</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">10</div></div>
                                         </div>
                                     </div>
                                 </div>
