@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.3.1
+ * BootstrapSlider - v.2.3.2
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -9,14 +9,15 @@
                 speed : 150,
                 offsetCount : 1,
                 delay : false,
+                autoPlayStopOnHover : true,
                 hideNav : false,
                 responsive : true,
                 paginationUl : false,
+                loop : true,
                 next : $('.next'),
                 prev : $('.prev'),
                 slide : $('.slide'),
-                loop : true,
-                autoPlayStopOnHover : true
+                easing : 'swing'
             };
             options = $.extend( defaultOptions, options );
             
@@ -167,7 +168,8 @@
                     bufferLeft = -Math.abs((slideCssWidth / multiplier) + (oneChildOffset * ($(this).attr('data-num') - 1)));
                     slide.animate({
                         left: bufferLeft + unit
-                    }, options.speed);
+                    }, options.speed,
+                    options.easing);
                     return true;
                 });
             }
@@ -202,7 +204,8 @@
                     }
                     slide.animate({
                         left: bufferLeft + unit
-                    }, options.speed);
+                    }, options.speed,
+                    options.easing);
                     return true;
                 });
             }
@@ -275,7 +278,7 @@
                     }
                     slide.animate({
                         left: (bufferLeft) + unit
-                    }, options.speed, '', loopEmulate());
+                    }, options.speed, options.easing, loopEmulate());
                 } else {
                     //if not loop
                     if (((bufferLeft + (x * oneChildOffset * options.offsetCount)) <= 0 && x==1) || ((bufferLeft + (x * oneChildOffset * options.offsetCount)) > childrenPerLoop * oneChildOffset - slideCssWidth && x==-1)) {
@@ -289,7 +292,7 @@
                     }
                     slide.animate({
                         left: (bufferLeft) + unit
-                    }, options.speed, '');
+                    }, options.speed, options.easing);
                 }
                 //pagination change
                 if (options.paginationUl) {
