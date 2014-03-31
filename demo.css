@@ -5,9 +5,12 @@
     padding: 10px 0;
 }
 .slider .inner {
-    background: #dcdcdc;
+    background: #27AE60;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15) inset;
     padding: 15px 0;
     margin-bottom: 15px;
+    font-weight: bold;
+    color: #FFF;
 }
 .slider-pagination li {
     float: left;
