@@ -3,30 +3,31 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Bootstrap Responsive Carousel 2.3</title>
+        <title>Bootstrap Responsive Carousel 2.4</title>
 		<link rel="stylesheet" href="bootstrap.min.css" type="text/css"/>
 		<link rel="stylesheet" href="demo.css" type="text/css"/>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-        <script src="jquery.bootstrapSlider.js"></script>
+		<script src="jquery.bootstrapSlider.js"></script>
         <script type="text/javascript">
-            jQuery(document).ready(function ($) {
+            $(document).ready(function () {
                 $('.slider-responsive').bootstrapSlider();
-                $('.slider-not-responsive').bootstrapSlider({
-                    speed: 600,
-                    delay: 2000,
+                $('.slider-auto-play').bootstrapSlider({
+                    speed: 800,
                     offsetCount: 2,
+                    delay: 2000,
                     hideNav: true,
-                    responsive: false,
-                    paginationUl: $('.slider-not-responsive-pagination'),
-                    easing: 'easeInOutBack'
+                    unit: 'px',
+                    easing: 'easeInOutBack',
+                    paginationUl: $('.slider-auto-play-pagination')
                 });
                 $('.slider-not-loop').bootstrapSlider({
-                    speed: 500,
+                    speed: 600,
                     offsetCount: 3,
-                    paginationUl: $('.slider-not-loop-pagination'),
+                    resize: false,
                     loop: false,
-                    easing: 'easeOutExpo'
+                    easing: 'easeOutExpo',
+                    paginationUl: $('.slider-not-loop-pagination')
                 });
                 $('.slider-custom-elements').bootstrapSlider({
                     slide: $('.slider-items-wrapper'),
@@ -43,7 +44,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1>
-                        <a href="https://github.com/trollwinner" target="_blank">Bootstrap Responsive Carousel 2.3</a>
+                        <a href="https://github.com/trollwinner" target="_blank">Bootstrap Responsive Carousel 2.4</a>
                     </h1>
                     <div class="row">
                         <div class="col-md-6">
@@ -69,6 +70,22 @@
                         <div class="col-md-6">
                             <h2>Default options</h2>
                             <code>
+                                {<br/>
+                                speed : 150,<br/>
+                                offsetCount : 1,<br/>
+                                delay : false,<br/>
+                                autoPlayStopOnHover : true,<br/>
+                                loop : true,<br/>
+                                hideNav : false,<br/>
+                                resize : true,<br/>
+                                unit : '%',<br/>
+                                easing : 'swing',<br/>
+                                paginationUl : false,<br/>
+                                next : $('.next'),<br/>
+                                prev : $('.prev'),<br/>
+                                slide : $('.slide')<br/>
+                                }<br/>
+                                <br/>
                                 $('.slider-responsive').bootstrapSlider();
                             </code>
                             <div class="slider-responsive slider">
@@ -104,20 +121,20 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <h2>Not responsive, autoplay, pagination</h2>
+                            <h2>Auto-play, hide nav, pixels, easing, pagination</h2>
                             <code>
-                                $('.slider-not-responsive').bootstrapSlider({<br/>
-                                speed: 600,<br/>
-                                delay: 2000,<br/>
+                                $('.slider-auto-play').bootstrapSlider({<br/>
+                                speed: 800,<br/>
                                 offsetCount: 2,<br/>
+                                delay: 2000,<br/>
                                 hideNav: true,<br/>
-                                responsive: false,<br/>
-                                paginationUl: $('.slider-not-responsive-pagination')<br/>
-                                easing: 'easeInOutBack'<br/>
+                                unit: 'px',<br/>
+                                easing: 'easeInOutBack',<br/>
+                                paginationUl: $('.slider-auto-play-pagination')<br/>
                                 });
                             </code>
-                            <div class="slider-not-responsive slider">
-                                <ul class="slider-not-responsive-pagination slider-pagination clearfix"></ul>
+                            <div class="slider-auto-play slider">
+                                <ul class="slider-auto-play-pagination slider-pagination clearfix"></ul>
                                 <div>
                                     <div class="row">
                                         <div class="slide">
@@ -128,7 +145,6 @@
                                             <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">5</div></div>
                                             <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">6</div></div>
                                             <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">7</div></div>
-                                            <div class="col-xs-6 col-md-4 col-lg-3"><div class="inner">8</div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -147,14 +163,15 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <h2>Responsive, not loop, pagination</h2>
+                            <h2>Not resizable, not loop, easing, pagination</h2>
                             <code>
                                 $('.slider-not-loop').bootstrapSlider({<br/>
-                                speed: 200,<br/>
+                                speed: 600,<br/>
                                 offsetCount: 3,<br/>
-                                paginationUl: $('.slider-not-loop-pagination'),<br/>
-                                loop: false<br/>
+                                resize: false,<br/>
+                                loop: false,<br/>
                                 easing: 'easeOutExpo'<br/>
+                                paginationUl: $('.slider-not-loop-pagination'),<br/>
                                 });
                             </code>
                             <div class="slider-not-loop slider">
@@ -166,11 +183,10 @@
                                             <div class="col-sm-3 col-xs-6"><div class="inner">2</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">3</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">4</div></div>
+                                            <div class="col-sm-3 col-xs-6"><div class="inner">5</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">6</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">7</div></div>
                                             <div class="col-sm-3 col-xs-6"><div class="inner">8</div></div>
-                                            <div class="col-sm-3 col-xs-6"><div class="inner">9</div></div>
-                                            <div class="col-sm-3 col-xs-6"><div class="inner">10</div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -191,7 +207,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <h2>Custom elements</h2>
+                            <h2>Custom control elements</h2>
                             <code>
                                 $('.slider-custom-elements').bootstrapSlider({<br/>
                                 slide: $('.slider-items-wrapper'),<br/>
