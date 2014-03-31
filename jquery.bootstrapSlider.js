@@ -1,149 +1,179 @@
 /*
- * BootstrapSlider - v.2.3.3
+ * BootstrapSlider - v.2.4
  * https://github.com/trollwinner
  */
 (function( $ ) {
     $.fn.bootstrapSlider = function(options) {
         return this.each(function() {
+            $this = $(this);
             var defaultOptions = {
                 speed : 150,
                 offsetCount : 1,
                 delay : false,
                 autoPlayStopOnHover : true,
-                hideNav : false,
-                responsive : true,
-                paginationUl : false,
                 loop : true,
+                hideNav : false,
+                resize : true,
+                unit : '%',
+                easing : 'swing',
+                paginationUl : false,
                 next : $('.next'),
                 prev : $('.prev'),
-                slide : $('.slide'),
-                easing : 'swing'
+                slide : $('.slide')
             };
             options = $.extend( defaultOptions, options );
             
-            var slide = $(this).find(options.slide);
-            var prev = $(this).find(options.prev);
-            var next = $(this).find(options.next);
+            var slide = $this.find(options.slide);
+            var prev = $this.find(options.prev);
+            var next = $this.find(options.next);
             var slideParent = slide.parent();
             var slideParentWrapper = null;
             var childrenCount = slide.children().length;
             var unit = '%';
-            var temp = 0;
-            var bufferLeft = 0;
-            var childrenPerLoop = 0;
-            var multiplier = 3;
-            if (slideParent.parent()[0] !== $(this)[0]) {
+            var multiplier = 1;
+            var oneChildOffset, slideCssWidth, childrenPerLoop, bufferLeft, temp = 0;
+            var pagination = undefined;
+            var letsWork = false;
+
+            if (slideParent.parent()[0] !== $this[0]) {
                 slideParentWrapper = slideParent.parent();
             }
-            if (options.hideNav) {
-                prev.css({'visibility': 'hidden'});
-                next.css({'visibility': 'hidden'});
-            }
-            if (!options.loop) {
-                multiplier = 1;
-            }
-
             if (slide.children(':first-child').outerWidth(true) * childrenCount > slideParent.width()) {
+                letsWork = true;
+            }
 
-                slide.children().each(function () {
-                    temp += $(this).outerWidth(true);
-                    if (temp <= slideParent.width()) {
-                        childrenPerLoop++;
-                    }
+            // applying options
+            // hide navs
+            if (options.hideNav) {
+                prev.addClass('hidden');
+                next.addClass('hidden');
+            }
+            // clone children for loop effect
+            if (options.loop && letsWork) {
+                multiplier = 3;
+                $(slide.children()).clone().appendTo(slide).addClass('clone').clone().prependTo(slide).addClass('clone');
+            }
+            // recall calculating if resize option is true
+            if (options.resize) {
+                $(window).resize(function () {
+                    slide.promise().done(function() {
+                        slide.children().css('width', '');
+                        slide.css('width', '');
+                        if (options.paginationUl) {
+                            pagination.children().removeClass('active');
+                            pagination.children('li:first-child').addClass('active');
+                        }
+                        workPrepare($this);
+                    });
                 });
-
-                var childCss = {};
-                if (childrenPerLoop == 0) {
-                    childrenPerLoop = 1;
-                    childCss['float'] = 'left';
-                }
-                var oneChildIinPx = (slide.parent().width()) / childrenPerLoop;
-                var slideWidthInPx = childrenCount * multiplier * oneChildIinPx;
-                var slideWidthIinPc = 100 / (slide.parent().width() / slideWidthInPx);
-                var oneChildWidthInPc = 100 / (slideWidthInPx / oneChildIinPx);
-                var slideCssWidth, oneChildWidth, oneChildOffset = 0;
-
-                if (options.responsive) {
-                    slideCssWidth = slideWidthIinPc;
-                    oneChildWidth = oneChildWidthInPc;
-                    oneChildOffset = (slideWidthIinPc / multiplier) / childrenCount;
-                } else {
-                    unit = 'px';
-                    slideCssWidth = slideWidthInPx;
-                    oneChildWidth = oneChildIinPx;
-                    oneChildOffset = oneChildIinPx;
-                }
-                childCss['width'] = oneChildWidth + unit;
-
-                if (options.loop) {
-                    bufferLeft = -(slideCssWidth / multiplier);
-                    $(slide.children()).clone().appendTo(slide).addClass('clone').clone().prependTo(slide).addClass('clone');
-                } else {
-                    bufferLeft = 0;
-                }
-
-                //adding css
-                if (slideParentWrapper != null) {
-                    slideParentWrapper.css({
-                        'overflow': 'hidden'
+            }
+            //auto play
+            if (options.delay && letsWork) {
+                var blocked = false;
+                window.onblur = function () {
+                    blocked = true;
+                };
+                window.onfocus = function () {
+                    blocked = false;
+                };
+                if (options.autoPlayStopOnHover) {
+                    $this.hover(function () {
+                        blocked = true;
+                    }, function () {
+                        blocked = false;
                     });
                 }
-                slideParent.css({
-                    'overflow': 'hidden'
-                });
-                slide.css({
-                    'position': 'relative',
-                    'width': slideCssWidth + unit,
-                    'left': bufferLeft + unit,
-                    'overflow': 'hidden'
-                });
-                slide.children().css(childCss);
-
-                //pagination
-                if (options.paginationUl) {
-                    var pagination = $(this).find(options.paginationUl);
-                    if (options.loop) {
-                        loopPaginationCreate();
-                        loopPaginationClickDelegate();
-                    } else {
-                        notLoopPaginationCreate();
-                        notLoopPaginationClickDelegate();
+                setInterval(function () {
+                    if (!blocked) {
+                        next.click();
                     }
-                }
+                }, options.delay);
+            }
 
-                next.on('click', function() { work(-1);});
-                prev.on('click', function() { work(1); });
+            // start work
+            workPrepare($this);
 
-                //auto play
-                if (options.delay) {
-                    var blocked = false;
-                    window.onblur = function () {
-                        blocked = true;
-                    };
-                    window.onfocus = function () {
-                        blocked = false;
-                    };
-                    if (options.autoPlayStopOnHover) {
-                        $(this).hover(function () {
-                            blocked = true;
-                        }, function () {
-                            blocked = false;
+            // methods
+            function workPrepare($this) {
+                if (letsWork) {
+                    temp = 0;
+                    childrenPerLoop = 0;
+                    slide.children().each(function () {
+                        temp += $(this).outerWidth(true);
+                        if (temp <= slideParent.width()) {
+                            childrenPerLoop++;
+                        }
+                    });
+
+                    var childCss = {};
+                    if (childrenPerLoop == 0) {
+                        childrenPerLoop = 1;
+                        childCss['float'] = 'left';
+                    }
+                    var oneChildIinPx = (slide.parent().width()) / childrenPerLoop;
+                    var slideWidthInPx = childrenCount * multiplier * oneChildIinPx;
+                    var slideWidthIinPc = 100 / (slide.parent().width() / slideWidthInPx);
+                    var oneChildWidthInPc = 100 / (slideWidthInPx / oneChildIinPx);
+                    var oneChildWidth = 0;
+
+                    if (options.unit == 'px') {
+                        unit = 'px';
+                        slideCssWidth = slideWidthInPx;
+                        oneChildWidth = oneChildIinPx;
+                        oneChildOffset = oneChildIinPx;
+                    } else {
+                        slideCssWidth = slideWidthIinPc;
+                        oneChildWidth = oneChildWidthInPc;
+                        oneChildOffset = (slideWidthIinPc / multiplier) / childrenCount;
+                    }
+                    childCss['width'] = oneChildWidth + unit;
+
+                    if (options.loop) {
+                        bufferLeft = -(slideCssWidth / multiplier);
+                    } else {
+                        bufferLeft = 0;
+                    }
+
+                    //adding css
+                    if (slideParentWrapper != null) {
+                        slideParentWrapper.css({
+                            'overflow': 'hidden'
                         });
                     }
-                    setInterval(function () {
-                        if (!blocked) {
-                            next.click();
-                        }
-                    }, options.delay);
-                }
-            }
-            else {
-                prev.css({'visibility': 'hidden'});
-                next.css({'visibility': 'hidden'});
-            }
-            return true;
+                    slideParent.css({
+                        'overflow': 'hidden'
+                    });
+                    slide.css({
+                        'position': 'relative',
+                        'width': slideCssWidth + unit,
+                        'left': bufferLeft + unit,
+                        'overflow': 'hidden'
+                    });
+                    slide.children().css(childCss);
 
-            function loopPaginationCreate() {
+                    //pagination
+                    if (options.paginationUl) {
+                        pagination = $this.find(options.paginationUl);
+                        if (options.loop) {
+                            loopPaginationCreate(pagination);
+                            loopPaginationClickDelegate(pagination);
+                        } else {
+                            notLoopPaginationCreate(pagination);
+                            notLoopPaginationClickDelegate(pagination);
+                        }
+                    }
+
+                    next.on('click', function() { work(-1);});
+                    prev.on('click', function() { work(1); });
+                }
+                else {
+                    prev.addClass('disabled');
+                    next.addClass('disabled');
+                }
+                return true;
+            }
+
+            function loopPaginationCreate(pagination) {
                 var paginationHtml = '';
                 var j = 1;
                 for (var i = 1; i <= childrenCount; i = i + options.offsetCount) {
@@ -153,7 +183,8 @@
                 pagination.children('li:first-child').addClass('active');
                 return true;
             }
-            function loopPaginationClickDelegate() {
+
+            function loopPaginationClickDelegate(pagination) {
                 pagination.children('li').on('click', function () {
                     if (slide.is(':animated')) {return false;}
                     pagination.children('li').removeClass('active');
@@ -161,12 +192,12 @@
                     bufferLeft = -Math.abs((slideCssWidth / multiplier) + (oneChildOffset * ($(this).attr('data-num') - 1)));
                     slide.animate({
                         left: bufferLeft + unit
-                    }, options.speed,
-                    options.easing);
+                    }, options.speed, options.easing);
                     return true;
                 });
             }
-            function notLoopPaginationCreate() {
+
+            function notLoopPaginationCreate(pagination) {
                 var paginationHtml = '';
                 var x = Math.ceil((childrenCount - childrenPerLoop) / options.offsetCount) + 1;
                 temp = 0;
@@ -182,7 +213,8 @@
                 prev.addClass('disabled');
                 return true;
             }
-            function notLoopPaginationClickDelegate() {
+
+            function notLoopPaginationClickDelegate(pagination) {
                 pagination.children('li').on('click', function () {
                     if (slide.is(':animated')) {return false;}
                     pagination.children('li').removeClass('active');
@@ -197,12 +229,12 @@
                     }
                     slide.animate({
                         left: bufferLeft + unit
-                    }, options.speed,
-                    options.easing);
+                    }, options.speed, options.easing);
                     return true;
                 });
             }
-            function loopPaginationChange(x) {
+
+            function loopPaginationChange(pagination, x) {
                 if (x == -1) {
                     if (pagination.children('li.active').is(':last-child')) {
                         pagination.children('li.active').removeClass('active');
@@ -223,7 +255,8 @@
                 }
                 return true;
             }
-            function notLoopPaginationChange(x) {
+
+            function notLoopPaginationChange(pagination, x) {
                 if (x == -1) {
                     if (!pagination.children('li.active').is(':last-child')) {
                         next.removeClass('disabled');
@@ -245,6 +278,7 @@
                 }
                 return true;
             }
+
             function loopEmulate() {
                 setTimeout(function() {
                     if (bufferLeft > -childrenCount * oneChildOffset) {
@@ -257,6 +291,7 @@
                     }
                 }, options.speed + 50);
             }
+
             function work(x) {
                 if (slide.is(':animated')) {return false;}
                 if (options.loop) {
@@ -289,14 +324,16 @@
                 }
                 //pagination change
                 if (options.paginationUl) {
+                    var pagination = $(options.paginationUl);
                     if (options.loop) {
-                        loopPaginationChange(x);
+                        loopPaginationChange(pagination, x);
                     } else {
-                        notLoopPaginationChange(x);
+                        notLoopPaginationChange(pagination, x);
                     }
                 }
                 return true;
             }
+
         });
     };
 })(jQuery);
