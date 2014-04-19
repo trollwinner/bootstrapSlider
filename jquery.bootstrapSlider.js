@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.4
+ * BootstrapSlider - v.2.4.1
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -22,7 +22,7 @@
                 slide : $('.slide')
             };
             options = $.extend( defaultOptions, options );
-            
+
             var slide = $this.find(options.slide);
             var prev = $this.find(options.prev);
             var next = $this.find(options.next);
@@ -176,8 +176,14 @@
             function loopPaginationCreate(pagination) {
                 var paginationHtml = '';
                 var j = 1;
+                var liClass = pagination.attr('class');
+                if (liClass) {
+                    liClass = 'class="' + liClass.split(' ')[0] + '-item"';
+                } else {
+                    liClass = ''
+                }
                 for (var i = 1; i <= childrenCount; i = i + options.offsetCount) {
-                    paginationHtml = paginationHtml + '<li data-num="' + i + '">' + (j++) + '</li>';
+                    paginationHtml = paginationHtml + '<li '+liClass+' data-num="' + i + '">' + (j++) + '</li>';
                 }
                 pagination.html('').append(paginationHtml);
                 pagination.children('li:first-child').addClass('active');
@@ -199,10 +205,16 @@
 
             function notLoopPaginationCreate(pagination) {
                 var paginationHtml = '';
+                var liClass = pagination.attr('class');
+                if (liClass) {
+                    liClass = 'class="' + liClass.split(' ')[0] + '-item"';
+                } else {
+                    liClass = ''
+                }
                 var x = Math.ceil((childrenCount - childrenPerLoop) / options.offsetCount) + 1;
                 temp = 0;
                 for (var i = 1; i <= x; i++) {
-                    paginationHtml = paginationHtml + '<li data-num="' + (temp) + '">' + i + '</li>';
+                    paginationHtml = paginationHtml + '<li '+liClass+' data-num="' + (temp) + '">' + i + '</li>';
                     temp = temp + options.offsetCount;
                     if (temp > childrenCount - childrenPerLoop ) {
                         temp = childrenCount - childrenPerLoop;
