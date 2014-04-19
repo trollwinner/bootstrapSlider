@@ -59,7 +59,7 @@
                     slide.promise().done(function() {
                         slide.children().css('width', '');
                         slide.css('width', '');
-                        if (options.paginationUl) {
+                        if (options.paginationUl && pagination) {
                             pagination.children().removeClass('active');
                             pagination.children('li:first-child').addClass('active');
                         }
