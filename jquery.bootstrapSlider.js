@@ -1,11 +1,11 @@
 /*
- * BootstrapSlider - v.2.4.1
+ * BootstrapSlider - v.2.4.2
  * https://github.com/trollwinner
  */
 (function( $ ) {
     $.fn.bootstrapSlider = function(options) {
         return this.each(function() {
-            $this = $(this);
+            var $this = $(this);
             var defaultOptions = {
                 speed : 150,
                 offsetCount : 1,
@@ -32,14 +32,11 @@
             var unit = '%';
             var multiplier = 1;
             var oneChildOffset, slideCssWidth, childrenPerLoop, bufferLeft, temp = 0;
-            var pagination = undefined;
-            var letsWork = false;
+            var pagination = null;
+            var letsWork = (slide.children(':first-child').outerWidth(true) * childrenCount > slideParent.width());
 
             if (slideParent.parent()[0] !== $this[0]) {
                 slideParentWrapper = slideParent.parent();
-            }
-            if (slide.children(':first-child').outerWidth(true) * childrenCount > slideParent.width()) {
-                letsWork = true;
             }
 
             // applying options
@@ -48,25 +45,24 @@
                 prev.addClass('hidden');
                 next.addClass('hidden');
             }
-            // clone children for loop effect
-            if (options.loop && letsWork) {
-                multiplier = 3;
-                $(slide.children()).clone().appendTo(slide).addClass('clone').clone().prependTo(slide).addClass('clone');
-            }
+
             // recall calculating if resize option is true
             if (options.resize) {
                 $(window).resize(function () {
                     slide.promise().done(function() {
+                        // reset styles and state
+                        slide.children('.clone').remove();
                         slide.children().css('width', '');
-                        slide.css('width', '');
-                        if (options.paginationUl && pagination) {
-                            pagination.children().removeClass('active');
-                            pagination.children('li:first-child').addClass('active');
-                        }
+                        slide.css({
+                            'width': '',
+                            left: 0
+                        });
+                        letsWork = (slide.children(':first-child').outerWidth(true) * childrenCount > slideParent.width());
                         workPrepare($this);
                     });
                 });
             }
+
             //auto play
             if (options.delay && letsWork) {
                 var blocked = false;
@@ -96,6 +92,14 @@
             // methods
             function workPrepare($this) {
                 if (letsWork) {
+                    prev.removeClass('disabled');
+                    next.removeClass('disabled');
+
+                    // clone children for loop effect
+                    if (options.loop) {
+                        multiplier = 3;
+                        $(slide.children()).clone().appendTo(slide).addClass('clone').clone().prependTo(slide).addClass('clone');
+                    }
                     temp = 0;
                     childrenPerLoop = 0;
                     slide.children().each(function () {
