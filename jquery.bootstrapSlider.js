@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.4.2
+ * BootstrapSlider - v.2.4.3
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -81,7 +81,24 @@
                 }
                 setInterval(function () {
                     if (!blocked) {
-                        next.click();
+                        if (options.loop) {
+                            next.click();
+                        } else {
+                            if (!next.hasClass('disabled')) {
+                                next.click();
+                            } else {
+                                prev.addClass('disabled');
+                                next.removeClass('disabled');
+                                bufferLeft = 0;
+                                slide.animate({
+                                    left: bufferLeft + unit
+                                }, options.speed, options.easing);
+                                if (options.paginationUl) {
+                                    options.paginationUl.children('.active').toggleClass('active');
+                                    options.paginationUl.children(':first').toggleClass('active');
+                                }
+                            }
+                        }
                     }
                 }, options.delay);
             }
