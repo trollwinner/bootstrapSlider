@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.4.3
+ * BootstrapSlider - v.2.4.4
  * https://github.com/trollwinner
  */
 (function( $ ) {
@@ -339,7 +339,11 @@
                     }
                     slide.animate({
                         left: (bufferLeft) + unit
-                    }, options.speed, options.easing, loopEmulate());
+                    }, options.speed, options.easing, 
+                    slide.promise().done(function() {
+                            loopEmulate();
+                        })
+                    );
                 } else {
                     //if not loop
                     if (((bufferLeft + (x * oneChildOffset * options.offsetCount)) <= 0 && x==1) || ((bufferLeft + (x * oneChildOffset * options.offsetCount)) > childrenPerLoop * oneChildOffset - slideCssWidth && x==-1)) {
