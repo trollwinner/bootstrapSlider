@@ -185,8 +185,8 @@
                         prev.on('click', $.proxy(function() {this.work(1)}, this));
                     }
                     else {
-                        prev.addClass('disabled');
-                        next.addClass('disabled');
+                        prev.addClass('disabled').unbind('click');
+                        next.addClass('disabled').unbind('click');
                     }
                     return true;
                 },
