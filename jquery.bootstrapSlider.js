@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.6
+ * BootstrapSlider - v.2.6.0
  * https://github.com/trollwinner
  */
 ;(function($) {
