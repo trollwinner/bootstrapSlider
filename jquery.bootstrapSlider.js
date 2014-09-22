@@ -1,27 +1,28 @@
 /*
- * BootstrapSlider - v.2.6.0
+ * BootstrapSlider - v.2.6.1
  * https://github.com/trollwinner
  */
-;(function($) {
-    $.fn.bootstrapSlider = function(options) {
+;(function ($) {
+    'use strict';
+    $.fn.bootstrapSlider = function (options) {
         var defaultOptions = {
-            speed : 150,
-            offsetCount : 1,
-            delay : false,
-            autoPlayStopOnHover : true,
-            loop : true,
+            speed: 150,
+            offsetCount: 1,
+            delay: false,
+            autoPlayStopOnHover: true,
+            loop: true,
             repeat: true,
-            hideNav : false,
-            resize : true,
-            unit : '%',
-            easing : 'swing',
-            paginationUl : false,
-            next : $('.next'),
-            prev : $('.prev'),
-            slide : $('.slide')
+            hideNav: false,
+            resize: true,
+            unit: '%',
+            easing: 'swing',
+            paginationUl: false,
+            next: $('.next'),
+            prev: $('.prev'),
+            slide: $('.slide')
         };
         options = $.extend(defaultOptions, options);
-        var bootstrapSlider = function(element) {
+        var bootstrapSlider = function (element) {
             var $this = $(element),
                 slide = $this.find(options.slide),
                 prev = $this.find(options.prev),
@@ -34,7 +35,7 @@
                 pagination = null,
                 letsWork = (slide.children(':first-child').outerWidth(true) * childrenCount > slideParent.width());
             var bootstrapSlider = {
-                init: function() {
+                init: function () {
                     if (slideParent.parent()[0] !== $this[0]) {
                         slideParentWrapper = slideParent.parent();
                     }
@@ -48,7 +49,7 @@
                     // recall calculating if resize option is true
                     if (options.resize) {
                         $(window).resize($.proxy(function () {
-                            slide.promise().done($.proxy(function() {
+                            slide.promise().done($.proxy(function () {
                                 // reset styles and state
                                 slide.children('.clone').remove();
                                 slide.children().css('width', '');
@@ -107,7 +108,7 @@
                     var childCss = {};
                     if (childrenPerLoop === 0) {
                         childrenPerLoop = 1;
-                        childCss['float'] = 'left';
+                        childCss.float = 'left';
                     }
                     var oneChildIinPx = (slide.parent().width()) / childrenPerLoop,
                         slideWidthInPx = childrenCount * multiplier * oneChildIinPx,
@@ -124,7 +125,7 @@
                         oneChildWidth = oneChildWidthInPc;
                         oneChildOffset = (slideWidthIinPc / multiplier) / childrenCount;
                     }
-                    childCss['width'] = oneChildWidth + options.unit;
+                    childCss.width = oneChildWidth + options.unit;
 
                     bufferLeft = options.loop ? -(slideCssWidth / multiplier) : 0;
 
@@ -152,25 +153,30 @@
                         this.paginationClickDelegate();
                     }
 
-                    next.on('click', $.proxy(function() {this.buttonClick(-1)}, this));
-                    prev.on('click', $.proxy(function() {this.buttonClick(1)}, this));
+                    next.on('click', $.proxy(function () {
+                        this.buttonClick(-1);
+                    }, this));
+                    prev.on('click', $.proxy(function () {
+                        this.buttonClick(1);
+                    }, this));
 
                     return true;
                 },
                 paginationCreate: function () {
                     var paginationHtml = '',
                         temp = 0,
+                        i, x,
                         liClass = pagination.attr('class');
                     liClass = liClass ? 'class="' + liClass.split(' ')[0] + '-item"' : '';
                     if (options.loop) {
-                        for (var i = 1, x = 1 ; i <= childrenCount; i += options.offsetCount) {
-                            paginationHtml = paginationHtml + '<li '+liClass+' data-num="' + ((slideCssWidth / multiplier) + (oneChildOffset * (i-1))) + '">' + (x++) + '</li>';
+                        for (i = 1, x = 1; i <= childrenCount; i += options.offsetCount) {
+                            paginationHtml = paginationHtml + '<li ' + liClass + ' data-num="' + ((slideCssWidth / multiplier) + (oneChildOffset * (i - 1))) + '">' + (x++) + '</li>';
                         }
                     } else {
                         for (i = 1, x = Math.ceil((childrenCount - childrenPerLoop) / options.offsetCount) + 1; i <= x; i++) {
-                            paginationHtml = paginationHtml + '<li '+liClass+' data-num="' + oneChildOffset * temp + '">' + i + '</li>';
+                            paginationHtml = paginationHtml + '<li ' + liClass + ' data-num="' + oneChildOffset * temp + '">' + i + '</li>';
                             temp += options.offsetCount;
-                            if (temp > (childrenCount - childrenPerLoop) ) {
+                            if (temp > (childrenCount - childrenPerLoop)) {
                                 temp = childrenCount - childrenPerLoop;
                             }
                         }
@@ -196,28 +202,27 @@
                     return true;
                 },
                 paginationChange: function (x) {
-
                     var states = {
                         '-1': {
-                            'prefix' : ':last-child',
-                            'method' : 'next'
+                            'prefix': ':last-child',
+                            'method': 'next'
                         },
                         '1': {
-                            'prefix' : ':first-child',
-                            'method' : 'prev'
+                            'prefix': ':first-child',
+                            'method': 'prev'
                         }
                     };
-                    if (pagination.children('li.active').is(states[x]['prefix'])) {
+                    if (pagination.children('li.active').is(states[x].prefix)) {
                         pagination.children('li.active').removeClass('active');
-                        pagination.children(states[-x]['prefix']).addClass('active');
+                        pagination.children(states[-x].prefix).addClass('active');
                     }
                     else {
-                        pagination.children('li.active').removeClass('active')[states[x]['method']]().addClass('active');
+                        pagination.children('li.active').removeClass('active')[states[x].method]().addClass('active');
                     }
                     return true;
                 },
                 loopEmulate: function () {
-                    slide.promise().done(function() {
+                    slide.promise().done(function () {
                         if (bufferLeft > -childrenCount * oneChildOffset) {
                             bufferLeft = bufferLeft - childrenCount * oneChildOffset;
                             slide.css('left', bufferLeft + options.unit);
@@ -229,7 +234,9 @@
                     });
                 },
                 buttonClick: function (x) {
-                    if (slide.is(':animated')) {return false;}
+                    if (slide.is(':animated')) {
+                        return false;
+                    }
                     if (options.loop) {
                         //if loop
                         if ((bufferLeft + x * options.offsetCount * oneChildOffset) < -childrenCount * oneChildOffset * 2) {
@@ -243,13 +250,14 @@
                         slide.animate({
                                 left: (bufferLeft) + options.unit
                             }, options.speed, options.easing,
-                            $.proxy(function() {this.loopEmulate()}, this)
+                            $.proxy(function () {
+                                this.loopEmulate();
+                            }, this)
                         );
                     } else {
                         //if not loop
-                        if (((bufferLeft + (x * oneChildOffset * options.offsetCount)) <= 0 && x===1)
-                            || ((bufferLeft + (x * oneChildOffset * options.offsetCount)) > childrenPerLoop * oneChildOffset - slideCssWidth && x===-1)
-                            ) {
+                        if (((bufferLeft + (x * oneChildOffset * options.offsetCount)) <= 0 && x === 1) || ((bufferLeft + (x * oneChildOffset * options.offsetCount)) > childrenPerLoop * oneChildOffset - slideCssWidth && x === -1)
+                        ) {
                             bufferLeft += x * oneChildOffset * options.offsetCount;
                         } else if (bufferLeft === 0) {
                             bufferLeft = childrenPerLoop * oneChildOffset - slideCssWidth;
@@ -257,7 +265,7 @@
                         else if (bufferLeft === childrenPerLoop * oneChildOffset - slideCssWidth) {
                             bufferLeft = 0;
                         } else {
-                            bufferLeft = (x===1) ? 0 : childrenPerLoop * oneChildOffset - slideCssWidth;
+                            bufferLeft = (x === 1) ? 0 : childrenPerLoop * oneChildOffset - slideCssWidth;
                         }
                         slide.animate({
                             left: (bufferLeft) + options.unit
@@ -272,6 +280,8 @@
             };
             return bootstrapSlider.init();
         };
-        return this.each(function() {bootstrapSlider(this)});
+        return this.each(function () {
+            bootstrapSlider(this);
+        });
     };
 })(jQuery);
