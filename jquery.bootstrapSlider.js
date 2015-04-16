@@ -1,5 +1,5 @@
 /*
- * BootstrapSlider - v.2.6.1
+ * BootstrapSlider - v.2.6.2
  * https://github.com/trollwinner
  */
 ;(function ($) {
@@ -66,12 +66,12 @@
                     //auto play
                     if (options.delay && letsWork) {
                         var blocked = false;
-                        window.onblur = function () {
+                        $(window).blur(function () {
                             blocked = true;
-                        };
-                        window.onfocus = function () {
+                        });
+                        $(window).focus(function () {
                             blocked = false;
-                        };
+                        });
                         if (options.autoPlayStopOnHover) {
                             $this.hover(function () {
                                 blocked = true;
